@@ -63,11 +63,9 @@ class SpectralProjection(AbstractOperation):
 
 
     def __get_orth_poly_basis_global(self, multiindex_set):
-
         max_level_deg             = (self.__get_no_1D_grid_points(np.max(multiindex_set)) - 1)/2
-         orth_poly_basis_global     = Multiindex(self._dim).get_poly_mindex(max_level_deg)
-
-         return orth_poly_basis_global
+        orth_poly_basis_global     = Multiindex(self._dim).get_poly_mindex(max_level_deg)
+        return orth_poly_basis_global
 
     def __get_orth_poly_basis_active_set(self, active_set):
 
@@ -324,13 +322,11 @@ class SpectralProjection(AbstractOperation):
             spectral_coeff                 += spectral_coeff_active_set
 
         for d in range(self._dim):
-            
             mindex = []
             for i in range(len(orth_poly_basis_active)):
                 if orth_poly_basis_active[i][d] != 0:
                     mindex.append(i)
-
-             directional_var[d] = np.sum([spectral_coeff[j]**2 for j in mindex])
+            directional_var[d] = np.sum([spectral_coeff[j]**2 for j in mindex])
 
         return directional_var
 
@@ -351,9 +347,9 @@ class SpectralProjection(AbstractOperation):
                 elif orth_poly_basis_local[i][d] != 0 and np.count_nonzero(orth_poly_basis_local[i]) >= 2:
                     mindex_interact.append(i)
 
-             directional_var[d] = np.sum([spectral_coeff_local[j]**2 for j in mindex_main])
+            directional_var[d] = np.sum([spectral_coeff_local[j]**2 for j in mindex_main])
 
-         directional_var[self._dim] = np.sum([spectral_coeff_local[j]**2 for j in mindex_interact])
+        directional_var[self._dim] = np.sum([spectral_coeff_local[j]**2 for j in mindex_interact])
 
         return directional_var
 
@@ -373,7 +369,7 @@ class SpectralProjection(AbstractOperation):
                 if orth_poly_basis_local[i][d] != 0:
                     mindex.append(i)
 
-             directional_var_all[d] = np.sum([spectral_coeff_local[j]**2 for j in mindex])
+            directional_var_all[d] = np.sum([spectral_coeff_local[j]**2 for j in mindex])
 
         return directional_var_all
 
@@ -443,7 +439,7 @@ class SpectralProjection(AbstractOperation):
                 if orth_poly_basis_global[i][d] != 0 and np.count_nonzero(orth_poly_basis_global[i]) == 1:
                     mindex.append(i)
 
-             sobol_indices[d] = np.sum([spectral_coeff[j]**2 for j in mindex])/Var
+            sobol_indices[d] = np.sum([spectral_coeff[j]**2 for j in mindex])/Var
 
         return sobol_indices
 
@@ -461,7 +457,7 @@ class SpectralProjection(AbstractOperation):
                 if orth_poly_basis_global[i][d] != 0:
                     mindex.append(i)
 
-             sobol_indices[d] = np.sum([spectral_coeff[j]**2 for j in mindex])/Var
+            sobol_indices[d] = np.sum([spectral_coeff[j]**2 for j in mindex])/Var
 
         return sobol_indices
 
