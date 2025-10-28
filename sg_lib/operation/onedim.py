@@ -9,63 +9,63 @@ norm_hermite = {0: 1.0, 1: 1.0, 2: 1.4142135623730951, 3: 2.4494897427831783, 4:
 
 def get_1D_orth_poly(deg, left, right, x_1D):
 
-	poly_eval = 0.
+    poly_eval = 0.
 
-	if left == 0. and right == 1.:
-		poly_eval = eval_sh_legendre(deg, x_1D)*np.sqrt(2*deg + 1)
-	elif left == -5. and right == 5.:
-		poly_eval = eval_hermitenorm(deg, x_1D)/norm_hermite[deg]
-	else:
-		distr 	= cp.Uniform(left, right)
-		poly 	= cp.generate_expansion(deg, distr, normed=True)
+    if left == 0. and right == 1.:
+        poly_eval = eval_sh_legendre(deg, x_1D)*np.sqrt(2*deg + 1)
+    elif left == -5. and right == 5.:
+        poly_eval = eval_hermitenorm(deg, x_1D)/norm_hermite[deg]
+    else:
+        distr     = cp.Uniform(left, right)
+        poly     = cp.generate_expansion(deg, distr, normed=True)
 
-		poly_eval = poly[deg](x_1D)
+        poly_eval = poly[deg](x_1D)
 
-	return poly_eval
+    return poly_eval
 
 def get_1D_barycentric_weights(grid_1D):
-		
-	size    = len(grid_1D)
-	w       = np.zeros(size)
+        
+    size    = len(grid_1D)
+    w       = np.zeros(size)
 
-	w[0] = 1.0
-	for j in range(1, size):
-		for k in range(j):
-			w[k] *= (grid_1D[k] - grid_1D[j])
+    w[0] = 1.0
+    for j in range(1, size):
+        for k in range(j):
+            w[k] *= (grid_1D[k] - grid_1D[j])
 
-		w[j] = np.prod([(grid_1D[j] - grid_1D[k]) for k in range(j)])			
+        w[j] = np.prod([(grid_1D[j] - grid_1D[k]) for k in range(j)])            
 
-	for j in range(size):
-	    w[j] = 1./w[j]
+    for j in range(size):
+        w[j] = 1./w[j]
 
-	return w
+    return w
 
 def eval_1D_barycentric_interpolant(grid_1D, barycentric_weights, j, x_1D):
-	
-	l = np.prod([(x_1D - x_i) for x_i in grid_1D])
+    
+    l = np.prod([(x_1D - x_i) for x_i in grid_1D])
 
-	barycentric_interpolant = 1.0
+    barycentric_interpolant = 1.0
 
-	if np.abs(x_1D - grid_1D[j]) > 1e-14:
-		barycentric_interpolant = l * barycentric_weights[j]/(x_1D - grid_1D[j])
-		
-	return barycentric_interpolant
+    if np.abs(x_1D - grid_1D[j]) > 1e-14:
+        barycentric_interpolant = l * barycentric_weights[j]/(x_1D - grid_1D[j])
+        
+    return barycentric_interpolant
 
 def eval_1D_orth_poly(deg, left, right, weight, x_1D):
-	
-	poly_eval= get_1D_orth_poly(deg, left, right, x_1D)
+    
+    poly_eval= get_1D_orth_poly(deg, left, right, x_1D)
 
-	return poly_eval
+    return poly_eval
 
 def compute_1D_quad_weights(grid_1D, left, right, weight):
-		
-	N = len(grid_1D)
-	V = np.zeros((N, N))
+        
+    N = len(grid_1D)
+    V = np.zeros((N, N))
 
-	for i in range(N):
-		for j in range(N):
-			V[i, j] = get_1D_orth_poly(j, left, right, grid_1D[i])
+    for i in range(N):
+        for j in range(N):
+            V[i, j] = get_1D_orth_poly(j, left, right, grid_1D[i])
 
-	weights = np.linalg.inv(V)[0, :]
+    weights = np.linalg.inv(V)[0, :]
 
-	return weights
+    return weights
